@@ -100,7 +100,7 @@ def present_tour_schedule(data: str):
             total_earnings += tournament[2]
         print(f"Total Earnings: ${total_earnings:,.2f}")
 
-# from src.present_data import present_data
+
 def main():
     """_summary_"""
     
