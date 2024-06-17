@@ -5,11 +5,13 @@
 # from src.parse_data import parse_tour_schedule
 # from src.present_data import present_tour_schedule
 import json
+import argparse
 import requests
 from bs4 import BeautifulSoup
+from datetime import datetime
 
 
-def fetch_data(url: str):
+def fetch_tour_data(year: int):
     """
     Fetches the content from the given URL.
 
@@ -19,6 +21,8 @@ def fetch_data(url: str):
     Returns:
     - content: The content fetched from the URL, or None if an error occurs.
     """
+    url = f"https://www.pgatour.com/schedule/{year}"
+    
     try:
         response_data = requests.get(url, timeout=10)
         response_data.raise_for_status()  # Raises HTTPError for bad responses
@@ -82,17 +86,28 @@ def present_tour_schedule(data: str):
     """
     Present the data in a user-friendly format.
     """
-    for champion in json.loads(data):
-        print(champion)
-        for tournament in json.loads(data)[champion]:
-            print(f"{tournament[0]} - {tournament[1]}")
-
+    data_dict = json.loads(data)
+    for champion, tournaments in data_dict.items():
+        print(f"\nChampion: {champion}")
+        total_earnings = 0
+        for tournament in tournaments:
+            print(f"  Tournament: {tournament[0]} - Earnings: ${tournament[1]:,.2f}")
+            total_earnings += tournament[1]
+        print(f"Total Earnings: ${total_earnings:,.2f}")
 
 # from src.present_data import present_data
 def main():
     """_summary_"""
-    url = "https://www.pgatour.com/schedule"
-    data = fetch_data(url)
+    
+    # Get the current year
+    current_year = datetime.now().year
+    
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description='Fetch PGA Tour Schedule Data.')
+    parser.add_argument('--year', type=int, help='Year to fetch data for', default=current_year)
+    args = parser.parse_args()
+    
+    data = fetch_tour_data(args.year)
     schedule = parse_tour_champion_earnings(data)
     present_tour_schedule(schedule)
 
