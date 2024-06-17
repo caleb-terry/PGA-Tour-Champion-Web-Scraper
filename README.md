@@ -22,6 +22,21 @@ Example usage:
 python tour_champion_scraper.py --year 2024
 ```
 
+**Note:** The script will retrieve data for the current year if no year is specified.
+
+## Output
+
+```
+.\tour_champion_scraper.py --year 2022
+
+Champion: Max Homa
+    Month: September
+      Tournament: Fortinet Championship - Earnings: $1,260,000.00
+    Month: May
+      Tournament: Wells Fargo Championship - Earnings: $1,620,000.00
+Total Earnings: $2,880,000.00
+```
+
 ## Contributing
 
 Contributions are welcome! If you have any suggestions or improvements, please open an issue or submit a pull request.
