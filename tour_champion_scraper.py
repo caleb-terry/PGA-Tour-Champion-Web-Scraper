@@ -41,7 +41,7 @@ def fetch_tour_data(year: int):
         print(f"Error during request: {e}")  # Superclass for all requests exceptions
 
 
-def parse_tour_champion_earnings(data: str):
+def parse_tour_schedule(data: str):
     """
     Parses the data from the given string.
 
@@ -55,6 +55,7 @@ def parse_tour_champion_earnings(data: str):
         all_data = json.loads(data)
         important_data = {}
         for month in all_data["props"]["pageProps"]["schedule"]["completed"]:
+            month_name = month["month"]
             for tournament in month["tournaments"]:
                 earnings_str = (
                     tournament.get("championEarnings", "$0")
@@ -71,11 +72,11 @@ def parse_tour_champion_earnings(data: str):
                         # Check if the champion already exists in the dictionary
                         if champion_name not in important_data:
                             important_data[champion_name] = [
-                                [tournament_name, earnings_per_champion]
+                                [month_name, tournament_name, earnings_per_champion]
                             ]
                         else:
                             important_data[champion_name].append(
-                                [tournament_name, earnings_per_champion]
+                                [month_name, tournament_name, earnings_per_champion]
                             )
         return json.dumps(important_data, indent=4)  # Pretty print the JSON
     except json.JSONDecodeError as e:
@@ -90,9 +91,13 @@ def present_tour_schedule(data: str):
     for champion, tournaments in data_dict.items():
         print(f"\nChampion: {champion}")
         total_earnings = 0
+        current_month = ""
         for tournament in tournaments:
-            print(f"  Tournament: {tournament[0]} - Earnings: ${tournament[1]:,.2f}")
-            total_earnings += tournament[1]
+            if current_month != tournament[0]:  # Check if the month has changed
+                current_month = tournament[0]
+                print(f"    Month: {current_month}")
+            print(f"      Tournament: {tournament[1]} - Earnings: ${tournament[2]:,.2f}")
+            total_earnings += tournament[2]
         print(f"Total Earnings: ${total_earnings:,.2f}")
 
 # from src.present_data import present_data
@@ -108,7 +113,7 @@ def main():
     args = parser.parse_args()
     
     data = fetch_tour_data(args.year)
-    schedule = parse_tour_champion_earnings(data)
+    schedule = parse_tour_schedule(data)
     present_tour_schedule(schedule)
 
 
