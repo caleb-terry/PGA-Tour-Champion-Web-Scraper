@@ -42,5 +42,3 @@ Total Earnings: $2,880,000.00
 Contributions are welcome! If you have any suggestions or improvements, please open an issue or submit a pull request.
 
 ## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
