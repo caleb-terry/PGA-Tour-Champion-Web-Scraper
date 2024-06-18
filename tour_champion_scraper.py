@@ -14,7 +14,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def fetch_tour_data(year: int):
+def fetch_tour_data(year: int) -> str:
     """
     Fetches the content from the given URL.
 
@@ -44,7 +44,7 @@ def fetch_tour_data(year: int):
         print(f"Error during request: {e}")
 
 
-def parse_tour_schedule(data: str):
+def parse_tour_schedule(data: str) -> str:
     """
     Parses the data from the given string.
 
@@ -52,7 +52,7 @@ def parse_tour_schedule(data: str):
     - data (str): The data to parse.
 
     Returns:
-    - dict: The parsed data.
+    - str: The parsed data in JSON format.
     """
     try:
         all_data = json.loads(data)
@@ -67,20 +67,13 @@ def parse_tour_schedule(data: str):
                 )
                 earnings = float(earnings_str) if earnings_str.isdigit() else 0
                 champions = tournament.get("champions", [])
-                # if champions are multiple, split the champion's earnings
-                # and add each champion as a new object in the array.
-                if champions:
-                    earnings_per_champion = earnings / len(champions)
-                    for champion in champions:
-                        champion_name = champion["displayName"]
-                        tournament_name = tournament["tournamentName"]
-
-                        # if the champion is already in the dictionary, append the new data
-                        # otherwise, add a new entry.
-                        important_data.setdefault(champion_name, []).append(
-                            [month_name, tournament_name, earnings_per_champion]
-                        )
-
+                earnings_per_champion = earnings / len(champions) if champions else 0
+                for champion in champions:
+                    champion_name = champion["displayName"]
+                    tournament_name = tournament["tournamentName"]
+                    important_data.setdefault(champion_name, []).append(
+                        [month_name, tournament_name, earnings_per_champion]
+                    )
         return json.dumps(important_data, indent=4)
     except json.JSONDecodeError as e:
         print(f"Error parsing JSON data: {e}")
