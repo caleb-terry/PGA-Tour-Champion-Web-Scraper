@@ -100,6 +100,35 @@ def present_tour_schedule(data: str):
         print(f"Total Earnings: ${total_earnings:,.2f}")
 
 
+def valid_year(year: str) -> int:
+    """
+    Validate that the input is:
+    - a 4-digit year greater than 1900
+    - not greater than the current year.
+
+    Parameters:
+    - year (str): The year to validate.
+
+    Returns:
+    - int: The validated year.
+
+    Raises:
+    - argparse.ArgumentTypeError: If the year is not a valid 4-digit year
+    greater than 1900 and not greater than the current year.
+    """
+    current_year = datetime.now().year
+    if (
+        not year.isdigit()
+        or len(year) != 4
+        or int(year) <= 1900
+        or int(year) > current_year
+    ):
+        raise argparse.ArgumentTypeError(
+            f"Invalid year: {year}. Year must be a 4-digit number greater than 1900 and not greater than {current_year}."
+        )
+    return int(year)
+
+
 def main():
     """
     Entry point of the script.
@@ -115,7 +144,10 @@ def main():
 
     parser = argparse.ArgumentParser(description="Fetch PGA Tour Schedule Data.")
     parser.add_argument(
-        "--year", type=int, help="Year to fetch data for", default=current_year
+        "--year",
+        type=valid_year,
+        help="The year to fetch data for. Default is the current year.",
+        default=current_year,
     )
     args = parser.parse_args()
 
