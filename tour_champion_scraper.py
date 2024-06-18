@@ -67,21 +67,20 @@ def parse_tour_schedule(data: str):
                 )
                 earnings = float(earnings_str) if earnings_str.isdigit() else 0
                 champions = tournament.get("champions", [])
-                if (
-                    champions
-                ):  # are multiple, split the champion's earnings and add each champion as a new object in the array.
+                # if champions are multiple, split the champion's earnings
+                # and add each champion as a new object in the array.
+                if champions:
                     earnings_per_champion = earnings / len(champions)
                     for champion in champions:
                         champion_name = champion["displayName"]
                         tournament_name = tournament["tournamentName"]
-                        if champion_name not in important_data:
-                            important_data[champion_name] = [
-                                [month_name, tournament_name, earnings_per_champion]
-                            ]
-                        else:
-                            important_data[champion_name].append(
-                                [month_name, tournament_name, earnings_per_champion]
-                            )
+
+                        # if the champion is already in the dictionary, append the new data
+                        # otherwise, add a new entry.
+                        important_data.setdefault(champion_name, []).append(
+                            [month_name, tournament_name, earnings_per_champion]
+                        )
+
         return json.dumps(important_data, indent=4)
     except json.JSONDecodeError as e:
         print(f"Error parsing JSON data: {e}")
@@ -108,7 +107,16 @@ def present_tour_schedule(data: str):
 
 
 def main():
+    """
+    Entry point of the script.
 
+    Parses command-line arguments to determine the year for
+    which PGA Tour Schedule Data should be fetched.
+
+    1. Fetches the tour data for the specified year
+    2. Parses the schedule
+    3. Presents it in a user-friendly format.
+    """
     current_year = datetime.now().year
 
     parser = argparse.ArgumentParser(description="Fetch PGA Tour Schedule Data.")
