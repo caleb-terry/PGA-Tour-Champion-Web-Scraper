@@ -21,7 +21,6 @@ def fetch_tour_data(year: int):
     try: # to get data
         response_data = requests.get(url, timeout=10)
         response_data.raise_for_status()
-
         soup = BeautifulSoup(response_data.content, "html.parser")
 
         data = soup.find("script", id="__NEXT_DATA__").string
@@ -29,7 +28,7 @@ def fetch_tour_data(year: int):
         return data
 
     except requests.exceptions.Timeout:
-        print("The request timed out") 
+        print("The request timed out")
     except requests.exceptions.HTTPError as e:
         print(f"HTTP error occurred: {e}")
     except requests.exceptions.RequestException as e:
@@ -87,7 +86,7 @@ def present_tour_schedule(data: str):
         total_earnings = 0
         current_month = ""
         for tournament in tournaments:
-            if current_month != tournament[0]:  # Check if the month has changed
+            if current_month != tournament[0]:
                 current_month = tournament[0]
                 print(f"    Month: {current_month}")
             print(f"      Tournament: {tournament[1]} - Earnings: ${tournament[2]:,.2f}")
