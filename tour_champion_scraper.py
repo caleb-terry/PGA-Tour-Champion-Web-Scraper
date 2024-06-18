@@ -1,8 +1,9 @@
 """
 Returns PGA champions for a given year.
+
 Parameters:
-  --year: The year to fetch data for. Default is the current year.
-  
+    --year: The year to fetch data for. Default is the current year.
+    
 Usage:
     python tour_champion_scraper.py --year 2021
 """
