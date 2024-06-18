@@ -1,8 +1,17 @@
+"""
+Returns PGA champions for a given year.
+Parameters:
+  --year: The year to fetch data for. Default is the current year.
+  
+Usage:
+    python tour_champion_scraper.py --year 2021
+"""
+
+from datetime import datetime
 import json
 import argparse
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime
 
 
 def fetch_tour_data(year: int):
@@ -99,12 +108,7 @@ def present_tour_schedule(data: str):
 
 
 def main():
-    """
-    Returns PGA champions for a given year.
 
-    Parameters:
-      --year =
-    """
     current_year = datetime.now().year
 
     parser = argparse.ArgumentParser(description="Fetch PGA Tour Schedule Data.")
