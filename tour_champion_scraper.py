@@ -114,17 +114,17 @@ def valid_year(year: str) -> int:
 
     Raises:
     - argparse.ArgumentTypeError: If the year is not a valid 4-digit year
-    greater than 1900 and not greater than the current year.
+    greater than 2012 and not greater than the current year.
     """
     current_year = datetime.now().year
     if (
         not year.isdigit()
         or len(year) != 4
-        or int(year) <= 1900
+        or int(year) <= 2013
         or int(year) > current_year
     ):
         raise argparse.ArgumentTypeError(
-            f"Invalid year: {year}. Year must be a 4-digit number greater than 1900 and not greater than {current_year}."
+            f"Invalid year: {year}. Year must be a 4-digit number greater than 2012 and not greater than {current_year}."
         )
     return int(year)
 
