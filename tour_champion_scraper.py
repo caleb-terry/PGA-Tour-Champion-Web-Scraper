@@ -120,7 +120,7 @@ def valid_year(year: str) -> int:
     if (
         not year.isdigit()
         or len(year) != 4
-        or int(year) <= 2013
+        or int(year) <= 2012
         or int(year) > current_year
     ):
         raise argparse.ArgumentTypeError(
