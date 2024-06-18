@@ -15,10 +15,10 @@ def fetch_tour_data(year: int):
     Returns:
     - content: The content fetched from the URL, or None if an error occurs.
     """
-    
+
     url = f"https://www.pgatour.com/schedule/{year}"
-    
-    try: # to get data
+
+    try:  # to get data
         response_data = requests.get(url, timeout=10)
         response_data.raise_for_status()
         soup = BeautifulSoup(response_data.content, "html.parser")
@@ -58,7 +58,9 @@ def parse_tour_schedule(data: str):
                 )
                 earnings = float(earnings_str) if earnings_str.isdigit() else 0
                 champions = tournament.get("champions", [])
-                if champions: # are multiple, split the champion's earnings and add each champion as a new object in the array.
+                if (
+                    champions
+                ):  # are multiple, split the champion's earnings and add each champion as a new object in the array.
                     earnings_per_champion = earnings / len(champions)
                     for champion in champions:
                         champion_name = champion["displayName"]
@@ -89,25 +91,28 @@ def present_tour_schedule(data: str):
             if current_month != tournament[0]:
                 current_month = tournament[0]
                 print(f"    Month: {current_month}")
-            print(f"      Tournament: {tournament[1]} - Earnings: ${tournament[2]:,.2f}")
+            print(
+                f"      Tournament: {tournament[1]} - Earnings: ${tournament[2]:,.2f}"
+            )
             total_earnings += tournament[2]
         print(f"Total Earnings: ${total_earnings:,.2f}")
 
 
 def main():
-   """
-   Returns PGA champions for a given year.
+    """
+    Returns PGA champions for a given year.
 
-   Parameters:
-     --year = 
-   """
-    
+    Parameters:
+      --year =
+    """
     current_year = datetime.now().year
-    
-    parser = argparse.ArgumentParser(description='Fetch PGA Tour Schedule Data.')
-    parser.add_argument('--year', type=int, help='Year to fetch data for', default=current_year)
+
+    parser = argparse.ArgumentParser(description="Fetch PGA Tour Schedule Data.")
+    parser.add_argument(
+        "--year", type=int, help="Year to fetch data for", default=current_year
+    )
     args = parser.parse_args()
-    
+
     data = fetch_tour_data(args.year)
     schedule = parse_tour_schedule(data)
     present_tour_schedule(schedule)
